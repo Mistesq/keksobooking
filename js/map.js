@@ -9,6 +9,8 @@ var MAX_ROOMS = 5;
 var MIN_GUEST = 1;
 var MAX_GUEST = 15;
 
+var DEFAULT_Y = 375;
+var DEFAULT_X = 600;
 var MIN_Y = 130;
 var MAX_Y = 630;
 var MIN_X = 0;
@@ -115,8 +117,7 @@ var shuffleArray = function(array) {
   return array;
 };
 
-var sectionMap = document.querySelector('.map');
-sectionMap.classList.remove('map--faded');
+
 
 function renderPins (pins) {
   var mapPin = document.querySelector('.map__pins');
@@ -129,7 +130,9 @@ function renderPins (pins) {
     mapPinElement.querySelector('img').src = author.avatar;
     mapPinElement.style.left = pins[i].location.x + 'px';
     mapPinElement.style.top = pins[i].location.y + 'px';
+    addAdsClickHandler(mapPinElement, pins[i]);
     fragment.appendChild(mapPinElement);
+
   }
 
   mapPin.appendChild(fragment);
@@ -193,8 +196,56 @@ function getAds(advertisement) {
     mapCardPlace.appendChild(mapCardElement);
 }
 
-var advertisements = generateAds();
-var randomNumberArray = getRandomNumber(0, advertisements.length - 1);
-console.log(advertisements);
-renderPins(advertisements);
-getAds(advertisements[randomNumberArray]);
+function initMap() {
+  var advertisements = generateAds();
+  var randomNumberArray = getRandomNumber(0, advertisements.length - 1);
+
+
+  console.log(advertisements);
+  renderPins(advertisements);
+  getAdress();
+
+  var mapPin = document.querySelectorAll('.map__pin');
+
+  for (var i = 0; i < mapPin.length; i++) {
+    mapPin[i].classList.add('hidden');
+  }
+
+  var mapButton = document.querySelector('.map__pin--main');
+  mapButton.classList.remove('hidden');
+}
+
+
+function getAdress() {
+  var form = document.querySelector('.notice__form');
+  var formAdress = form.querySelector('#address');
+
+  console.log(formAdress);
+  formAdress.value = DEFAULT_X  + ', ' + DEFAULT_Y;
+}
+
+function startMap() {
+  var sectionMap = document.querySelector('.map');
+  sectionMap.classList.remove('map--faded');
+  mapButton.removeEventListener('mouseup', startMap);
+
+  var form = document.querySelector('.notice__form');
+  form.classList.remove('notice__form--disabled');
+
+  var mapPin = document.querySelectorAll('.map__pin');
+
+  for (var i = 0; i < mapPin.length; i++) {
+    mapPin[i].classList.remove('hidden');
+  }
+}
+
+initMap();
+
+var mapButton = document.querySelector('.map__pin--main');
+mapButton.addEventListener('mouseup', startMap);
+
+function addAdsClickHandler(icon, advertisement) {
+  icon.addEventListener('click', function () {
+    getAds(advertisement);
+  });
+};
