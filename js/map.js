@@ -15,6 +15,10 @@ var MIN_Y = 130;
 var MAX_Y = 630;
 var MIN_X = 0;
 var MAX_X = 1200;
+var MAP_PIN_X_MIN = 35;
+var MAP_PIN_X_MAX = 1175;
+var MAP_PIN_Y_MIN = 130;
+var MAP_PIN_Y_MAX = 630;
 
 var TITLE_ADS = [
   'Большая уютная квартира',
@@ -54,39 +58,6 @@ var PHOTOS = [
   'http://o0.github.io/assets/images/tokyo/hotel3.jpg'
 ];
 
-function generateAds() {
-  var ads = [];
-  var titleAds = shuffleArray(TITLE_ADS);
-
-  for (var i = 0; i < COUNT_ADS; i++) {
-    var locationX = getRandomNumber(MIN_X, MAX_X);
-    var locationY = getRandomNumber(MIN_Y, MAX_Y);
-
-    ads.push({
-        'author': {
-          'avatar': 'img/avatars/user' + ('0' + (i + 1)) + '.png',
-        },
-        'offer': {
-          'title': titleAds[i],
-          'address': (locationX + ', ' + locationY),
-          'price': getRandomNumber(MIN_PRICE, MAX_PRICE),
-          'type': getRandomElement(TYPE_OF_ROOMS),
-          'rooms': getRandomNumber(MIN_ROOMS, MAX_ROOMS),
-          'guests': getRandomNumber(MIN_GUEST, MAX_GUEST),
-          'checkin': getRandomElement(TIMES),
-          'checkout': getRandomElement(TIMES),
-          'features': getArrayLength(ADVANTAGES),
-          'description': '',
-          'photos': shuffleArray(PHOTOS) // один и тот же порядок получается в каждом объявлении
-        },
-        'location': {
-          'x': locationX,
-          'y': locationY
-        }
-      });
-    }
-  return ads;
-};
 
 function getRandomNumber(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -118,92 +89,13 @@ var shuffleArray = function(array) {
 };
 
 
-
-function renderPins (pins) {
-  var mapPin = document.querySelector('.map__pins');
-  var template = document.querySelector('#pin').content.querySelector('button');
-  var fragment = document.createDocumentFragment();
-
-  for (var i = 0; i < pins.length; i++) {
-    var mapPinElement = template.cloneNode(true);
-    var author = pins[i].author;
-    mapPinElement.querySelector('img').src = author.avatar;
-    mapPinElement.style.left = pins[i].location.x + 'px';
-    mapPinElement.style.top = pins[i].location.y + 'px';
-    addAdsClickHandler(mapPinElement, pins[i]);
-    fragment.appendChild(mapPinElement);
-
-  }
-
-  mapPin.appendChild(fragment);
-}
-
-var getFeatures = function (arr) {
-  var fragment = document.createDocumentFragment();
-
-  for (var i = 0; i < arr.length; i++) {
-    var li = document.createElement('li');
-    li.className = 'feature feature--' + arr[i];
-    fragment.appendChild(li);
-  }
-  return fragment;
-};
-
-var getPhotos = function (arr) {
-  var fragment = document.createDocumentFragment();
-
-  for (var i = 0; i < arr.length; i++) {
-    var img = document.createElement('img');
-    img.className = 'popup__photo';
-    img.src = arr[i];
-    img.alt = 'Фотография жилья';
-    img.width = 45;
-    img.height = 40;
-    fragment.appendChild(img);
-  }
-  return fragment;
-};
-
-function getAds(advertisement) {
-  var offer = advertisement.offer;
-  var author = advertisement.author;
-
-  var mapCardPlace = document.querySelector('.map');
-  console.log(mapCardPlace);
-  var templateCard = document.querySelector('#card').content.querySelector('article');
-  console.log(templateCard);
-
-    var mapCardElement = templateCard.cloneNode(true);
-    mapCardElement.querySelector('.popup__title').textContent = offer.title;
-    mapCardElement.querySelector('.popup__text--address').textContent = offer.address;
-    mapCardElement.querySelector('.popup__text--price').textContent = offer.price + '₽/ночь';
-    mapCardElement.querySelector('.popup__type').textContent = offer.type;
-    mapCardElement.querySelector('.popup__text--capacity').textContent = offer.rooms + ' комнаты для ' + offer.guests + ' гостей';
-    mapCardElement.querySelector('.popup__text--time').textContent = 'Заезд после ' + offer.checkin + ', выезд до ' + offer.checkout;
-
-    var featuresElement = mapCardElement.querySelector('.popup__features');
-    featuresElement.innerHTML = '';
-    featuresElement.appendChild(getFeatures(offer.features));
-
-    mapCardElement.querySelector('.popup__description').textContent = offer.description;
-
-    var photosElement = mapCardElement.querySelector('.popup__photos');
-    photosElement.innerHTML = '';
-    photosElement.appendChild(getPhotos(offer.photos));
-
-    mapCardElement.querySelector('.popup__avatar').src = author.avatar;
-
-    mapCardPlace.appendChild(mapCardElement);
-}
-
 function initMap() {
-  var advertisements = generateAds();
+  var advertisements = window.data.generateAds();
   var randomNumberArray = getRandomNumber(0, advertisements.length - 1);
 
-
   console.log(advertisements);
-  renderPins(advertisements);
-  getAdress();
+  window.pin.renderPins(advertisements);
+  window.variables.formAdress.value = getAdress();
 
   var mapPin = document.querySelectorAll('.map__pin');
 
@@ -211,28 +103,20 @@ function initMap() {
     mapPin[i].classList.add('hidden');
   }
 
-  var mapButton = document.querySelector('.map__pin--main');
-  mapButton.classList.remove('hidden');
+  window.variables.mapPinMain.classList.remove('hidden');
 }
 
-
 function getAdress() {
-  var form = document.querySelector('.notice__form');
-  var formAdress = form.querySelector('#address');
-
-  console.log(formAdress);
-  formAdress.value = DEFAULT_X  + ', ' + DEFAULT_Y;
+  return Math.floor(window.variables.mapPinMain.offsetLeft + window.variables.mapPinMain.offsetWidth / 2) + ', ' + Math.floor(window.variables.mapPinMain.offsetTop + window.variables.mapPinMain.offsetHeight / 2);
 }
 
 function startMap() {
-  var sectionMap = document.querySelector('.map');
-  sectionMap.classList.remove('map--faded');
-  mapButton.removeEventListener('mouseup', startMap);
-
-  var form = document.querySelector('.notice__form');
-  form.classList.remove('notice__form--disabled');
-
   var mapPin = document.querySelectorAll('.map__pin');
+
+  window.variables.sectionMap.classList.remove('map--faded');
+  window.variables.mapPinMain.removeEventListener('mouseup', startMap);
+
+  window.variables.form.classList.remove('notice__form--disabled');
 
   for (var i = 0; i < mapPin.length; i++) {
     mapPin[i].classList.remove('hidden');
@@ -241,86 +125,10 @@ function startMap() {
 
 initMap();
 
-var mapButton = document.querySelector('.map__pin--main');
-mapButton.addEventListener('mouseup', startMap);
+window.variables.mapPinMain.addEventListener('mouseup', startMap);
 
 function addAdsClickHandler(icon, advertisement) {
   icon.addEventListener('click', function () {
-    getAds(advertisement);
+    window.card.getAds(advertisement);
   });
 };
-
-
-//работа с формой
-
-var typeInput = document.querySelector('#type');
-var priceInput = document.querySelector('#price');
-var timeinInput = document.querySelector('#timein');
-var timeoutInput = document.querySelector('#timeout');
-var roomNumberInput = document.querySelector('#room_number');
-var capacityInput = document.querySelector('#capacity');
-var submitButton = document.querySelector('.form__submit');
-
-function changeMinPrice() {
-  var price;
-
-  if (typeInput.value === "bungalo") {
-    price = 0;
-  }
-  else if (typeInput.value === "flat") {
-    price = 1000;
-  }
-  else if (typeInput.value === "house") {
-    price = 5000;
-  }
-  else if (typeInput.value === "palace") {
-    price = 10000;
-  }
-
-  if (priceInput.value < price) {
-    priceInput.setCustomValidity('минимальная стоимость для выбранного типа жилья ' + price);
-  }
-  else {
-    priceInput.setCustomValidity('');
-  }
-
-  priceInput.min = priceInput.placeholder = price;
-}
-
-typeInput.addEventListener('change', function() {
-  changeMinPrice();
-})
-
-function checkTimeSyncHandler(evt) {
-
-  var time = evt.target.value;
-
-  if (timeinInput.value === time) {
-    timeoutInput.value = time;
-  } else if (timeoutInput.value === time) {
-    timeinInput.value = time;
-  }
-};
-
-timeinInput.addEventListener('change', checkTimeSyncHandler);
-timeoutInput.addEventListener('change', checkTimeSyncHandler);
-
-
-roomNumberInput.addEventListener('change', validateRoom)
-
-capacityInput.addEventListener('change', validateRoom)
-
-submitButton.addEventListener('click', validateRoom)
-
-function validateRoom() {
-    if (roomNumberInput.value !== '100') {
-      if (capacityInput.value > roomNumberInput.value) {
-        capacityInput.setCustomValidity('Комнат не может быть меньше, чем гостей.')
-      }
-      else {
-        capacityInput.setCustomValidity('');
-      }
-  } else {
-      capacityInput.setCustomValidity('Этот вариант не для гостей.')
-    }
-}
