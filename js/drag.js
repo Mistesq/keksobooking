@@ -1,6 +1,11 @@
 'use strict';
 (function() {
 
+  var MAP_PIN_X_MIN = 35;
+  var MAP_PIN_X_MAX = 1175;
+  var MAP_PIN_Y_MIN = 130;
+  var MAP_PIN_Y_MAX = 630;
+
   window.variables.mapPinMain.addEventListener('mousedown', function(evt) {
     evt.preventDefault();
 
@@ -37,7 +42,7 @@
 
     function onMouseUp(upEvt) {
       upEvt.preventDefault();
-      window.variables.formAdress.value = getAdress();
+      window.variables.formAdress.value = window.map.getAdress();
       document.removeEventListener('mousemove', onMouseMove);
       document.removeEventListener('mouseup', onMouseUp);
 

@@ -1,12 +1,13 @@
 'use strict';
 (function() {
+  var form = document.querySelector('.ad-form');
   var typeInput = document.querySelector('#type');
   var priceInput = document.querySelector('#price');
   var timeinInput = document.querySelector('#timein');
   var timeoutInput = document.querySelector('#timeout');
   var roomNumberInput = document.querySelector('#room_number');
   var capacityInput = document.querySelector('#capacity');
-  var submitButton = document.querySelector('.form__submit');
+  var submitButton = document.querySelector('.ad-form__submit');
 
   function changeMinPrice() {
     var price;
@@ -52,12 +53,66 @@
   timeinInput.addEventListener('change', checkTimeSyncHandler);
   timeoutInput.addEventListener('change', checkTimeSyncHandler);
 
+  function uploadSuccess() {
+    var successTemplate = document.querySelector('#success').content.querySelector('.success');
+    var successMessage = successTemplate.cloneNode(true);
 
-  roomNumberInput.addEventListener('change', validateRoom)
+    window.variables.main.appendChild(successMessage);
 
-  capacityInput.addEventListener('change', validateRoom)
+    document.addEventListener('click', closeSuccessMessage);
+    document.addEventListener('keydown', function (evt) {
+      if (evt.keyCode === window.variables.ESC_BUTTON) {
+        closeSuccessMessage();
+      }
+    });
+  };
 
-  submitButton.addEventListener('click', validateRoom)
+  function closeSuccessMessage() {
+  var successMessage = document.querySelector('.success');
+
+  if (successMessage) {
+    window.variables.main.removeChild(successMessage);
+
+    document.removeEventListener('click', closeSuccessMessage);
+    document.removeEventListener('keydown', closeSuccessMessage);
+
+    form.reset();
+  }
+};
+
+  function uploadError() {
+   var errorTemplate = document.querySelector('#error').content.querySelector('.error');
+   var errorMessage = errorTemplate.cloneNode(true);
+   var errorButton = errorMessage.querySelector('.error__button');
+
+   window.variables.main.appendChild(errorMessage);
+
+   errorButton.addEventListener('click', closeErrorMessage);
+   document.addEventListener('keydown', function (evt) {
+     if (evt.keyCode === window.variables.ESC_BUTTON) {
+       closeErrorMessage();
+     }
+   });
+ };
+
+ var closeErrorMessage = function () {
+   var ErrorMessage = document.querySelector('.error');
+   var errorButton = document.querySelector('.error__button');
+
+   if (ErrorMessage) {
+     window.variables.main.removeChild(ErrorMessage);
+
+     errorButton.removeEventListener('click', closeErrorMessage);
+     document.removeEventListener('keydown', closeErrorMessage);
+
+     form.reset();
+   }
+ };
+
+  form.addEventListener('submit', function(evt) {
+    evt.preventDefault();
+    window.backend.upload(new FormData(form), uploadSuccess, uploadError);
+  });
 
   function validateRoom() {
       if (roomNumberInput.value !== '100') {
@@ -72,4 +127,7 @@
       }
   }
 
+  roomNumberInput.addEventListener('change', validateRoom);
+  capacityInput.addEventListener('change', validateRoom);
+  submitButton.addEventListener('click', validateRoom);
 })();

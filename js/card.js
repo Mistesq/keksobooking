@@ -31,6 +31,23 @@
     var offer = advertisement.offer;
     var author = advertisement.author;
 
+    function popupCloseClickHandler() {
+       window.utils.removeDomElement('.map__card');
+       document.removeEventListener('.click', popupCloseEscButton);
+
+       mapCardElement.addEventListener('keydown', function () {
+         window.utils.removeDomElement('.map__card');
+         document.removeEventListener('keydown', popupCloseEscButton);
+       });
+    };
+
+    function popupCloseEscButton(evt) {
+       if (evt.keyCode === window.variables.ESC_BUTTON) {
+         window.utils.removeDomElement('.map__card');
+         document.removeEventListener('keydown', popupCloseEscButton);
+       }
+    };
+
     // var sectionMap = document.querySelector('.map');
     var templateCard = document.querySelector('#card').content.querySelector('article');
     console.log(templateCard);
@@ -45,6 +62,7 @@
 
       var featuresElement = mapCardElement.querySelector('.popup__features');
       featuresElement.innerHTML = '';
+
       featuresElement.appendChild(getFeatures(offer.features));
 
       mapCardElement.querySelector('.popup__description').textContent = offer.description;
@@ -54,6 +72,9 @@
       photosElement.appendChild(getPhotos(offer.photos));
 
       mapCardElement.querySelector('.popup__avatar').src = author.avatar;
+      mapCardElement.querySelector('.popup__close').addEventListener('click', popupCloseClickHandler);
+      document.addEventListener('keydown', popupCloseEscButton);
+
 
       window.variables.sectionMap.appendChild(mapCardElement);
   }
@@ -61,5 +82,5 @@
   window.card = {
     getAds: getAds
   }
-  
+
 })();
