@@ -1,10 +1,13 @@
 'use strict';
 (function() {
 
-  var MAP_PIN_X_MIN = 35;
-  var MAP_PIN_X_MAX = 1175;
-  var MAP_PIN_Y_MIN = 130;
-  var MAP_PIN_Y_MAX = 630;
+  var MapPin = {
+    X_MIN: 35,
+    X_MAX: 1175,
+    Y_MIN: 130,
+    Y_MAX: 630
+  }
+
 
   window.variables.mapPinMain.addEventListener('mousedown', function(evt) {
     evt.preventDefault();
@@ -31,11 +34,11 @@
       var mapPinMainY = window.variables.mapPinMain.offsetTop - shift.y;
       var mapPinMainX = window.variables.mapPinMain.offsetLeft - shift.x;
 
-      if (mapPinMainY >= MAP_PIN_Y_MIN && mapPinMainY <= MAP_PIN_Y_MAX) {
+      if (mapPinMainY >= MapPin.Y_MIN && mapPinMainY <= MapPin.Y_MAX) {
       window.variables.mapPinMain.style.top = mapPinMainY + 'px';
       }
 
-      if (mapPinMainX >= MAP_PIN_X_MIN && mapPinMainX <= MAP_PIN_X_MAX) {
+      if (mapPinMainX >= MapPin.X_MIN && mapPinMainX <= MapPin.X_MAX) {
         window.variables.mapPinMain.style.left = mapPinMainX + 'px';
       }
     };
