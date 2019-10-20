@@ -9,30 +9,33 @@
   var capacityInput = document.querySelector('#capacity');
   var submitButton = document.querySelector('.ad-form__submit');
 
+  var Price = {
+    BUNGALO: 0,
+    FLAT: 1000,
+    HOUSE: 5000,
+    PALACE: 10000
+  };
+
   function changeMinPrice() {
     var price;
 
-    if (typeInput.value === "bungalo") {
-      price = 0;
-    }
-    else if (typeInput.value === "flat") {
-      price = 1000;
-    }
-    else if (typeInput.value === "house") {
-      price = 5000;
-    }
-    else if (typeInput.value === "palace") {
-      price = 10000;
-    }
+      if (typeInput.value === 'bungalo') {
+        price = Price.BUNGALO;
+      } else if (typeInput.value === 'flat') {
+        price = Price.FLAT;
+      } else if (typeInput.value === 'house') {
+        price = Price.HOUSE;
+      } else if (typeInput.value === 'palace') {
+        price = Price.PALACE;
+      }
 
-    if (priceInput.value < price) {
-      priceInput.setCustomValidity('минимальная стоимость для выбранного типа жилья ' + price);
-    }
-    else {
-      priceInput.setCustomValidity('');
-    }
+      if (priceInput.value <= price) {
+        priceInput.setCustomValidity('минимальная стоимость для выбранного типа жилья ' + price);
+      } else {
+        priceInput.setCustomValidity('');
+      }
 
-    priceInput.min = priceInput.placeholder = price;
+      priceInput.min = priceInput.placeholder = price;
   }
 
   typeInput.addEventListener('change', function() {

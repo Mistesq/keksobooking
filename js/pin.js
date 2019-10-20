@@ -1,12 +1,12 @@
 'use strict';
 (function() {
-  var COUNT_ADS = 8;
+  var COUNT_ADS = 5;
 
   function renderPins(pins) {
     var template = document.querySelector('#pin').content.querySelector('button');
     var fragment = document.createDocumentFragment();
 
-    for (var i = 0; i < COUNT_ADS; i++) {
+    for (var i = 0; i < COUNT_ADS && i < pins.length; i++) {
       var mapPinElement = template.cloneNode(true);
       var author = pins[i].author;
       mapPinElement.querySelector('img').src = author.avatar;

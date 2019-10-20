@@ -39,13 +39,21 @@
     return array;
   };
 
+  var removePins = function () {
+    var pins = document.querySelectorAll('.map__pin:not(.map__pin--main)');
+    pins.forEach(function (pin) {
+      pin.remove();
+    });
+  };
+
   window.utils = {
     setAvailabilityForm: setAvailabilityForm,
     removeDomElement: removeDomElement,
     getRandomNumber: getRandomNumber,
     getRandomElement: getRandomElement,
     getArrayLength: getArrayLength,
-    shuffleArray: shuffleArray
+    shuffleArray: shuffleArray,
+    removePins: removePins
   };
 
 })();

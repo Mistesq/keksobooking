@@ -36,9 +36,14 @@
     window.variables.mapPinMain.removeEventListener('mouseup', startMap);
 
     window.variables.form.classList.remove('ad-form--disabled');
+    window.backend.load(loadPins, errorHandler);
 
-    var advertisements = window.backend.load(window.pin.renderPins, errorHandler);
+  }
+
+  function loadPins(advertisements) {
+    window.pin.renderPins(advertisements);
     console.log(advertisements);
+    window.map.originalAds = advertisements;
   }
 
   initMap();
@@ -56,6 +61,7 @@
 
   window.map = {
     addAdsClickHandler: addAdsClickHandler,
-    getAdress: getAdress
+    getAdress: getAdress,
+    loadPins: loadPins
   }
 })();
