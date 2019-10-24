@@ -4,26 +4,26 @@
   var getFeatures = function (arr) {
     var fragment = document.createDocumentFragment();
 
-    for (var i = 0; i < arr.length; i++) {
+    arr.forEach(function (item) {
       var li = document.createElement('li');
-      li.className = 'feature feature--' + arr[i];
+      li.className = 'feature feature--' + item;
       fragment.appendChild(li);
-    }
+    });
     return fragment;
   };
 
   var getPhotos = function (arr) {
     var fragment = document.createDocumentFragment();
 
-    for (var i = 0; i < arr.length; i++) {
+    arr.forEach(function (item) {
       var img = document.createElement('img');
       img.className = 'popup__photo';
-      img.src = arr[i];
+      img.src = item;
       img.alt = 'Фотография жилья';
       img.width = 45;
       img.height = 40;
       fragment.appendChild(img);
-    }
+    });
     return fragment;
   };
 

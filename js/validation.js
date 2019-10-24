@@ -25,7 +25,8 @@
 
     if (priceInput.value >= priceInput.min) {
       priceInput.setCustomValidity('минимальная стоимость для выбранного типа жилья ' + priceInput.min);
-    } else {
+    }
+    else {
       priceInput.setCustomValidity('');
     }
 
@@ -39,7 +40,8 @@
 
     if (timeinInput.value === time) {
       timeoutInput.value = time;
-    } else if (timeoutInput.value === time) {
+    }
+    else if (timeoutInput.value === time) {
       timeinInput.value = time;
     }
   };

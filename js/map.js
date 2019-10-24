@@ -3,9 +3,12 @@
 
 
   function initMap() {
-    for (var i = 0; i < window.variables.formFieldset.length; i++) {
-      window.variables.formFieldset[i].disabled = true;
-    }
+    // for (var i = 0; i < window.variables.formFieldset.length; i++) {
+    //   window.variables.formFieldset[i].disabled = true;
+    // }
+    window.variables.formFieldset.forEach(function (item) {
+     item.disabled = true;
+    });
     console.log(window.variables.formFieldset);
     window.variables.formAdress.value = getAdress();
   }
@@ -29,9 +32,13 @@
   function startMap() {
     var mapPin = document.querySelectorAll('.map__pin');
 
-    for (var i = 0; i < window.variables.formFieldset.length; i++) {
-      window.variables.formFieldset[i].disabled = false;
-    }
+    // for (var i = 0; i < window.variables.formFieldset.length; i++) {
+    //   window.variables.formFieldset[i].disabled = false;
+    // }
+
+    window.variables.formFieldset.forEach(function (item) {
+     item.disabled = false;
+    });
     window.variables.sectionMap.classList.remove('map--faded');
     window.variables.mapPinMain.removeEventListener('mouseup', startMap);
 

@@ -1,9 +1,9 @@
 'use strict';
 (function () {
   function setAvailabilityForm(thatChange, state) {
-    for (var i = 0; i < thatChange.length; i++) {
-      thatChange[i].disabled = state;
-    }
+    thatChange.forEach(function (item) {
+      thatChange[item].disabled = state;
+    });
   };
 
   function removeDomElement(element) {
