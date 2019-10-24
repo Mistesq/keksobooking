@@ -9,7 +9,6 @@
     window.variables.formFieldset.forEach(function (item) {
      item.disabled = true;
     });
-    console.log(window.variables.formFieldset);
     window.variables.formAdress.value = getAdress();
   }
 
@@ -49,7 +48,6 @@
 
   function loadPins(advertisements) {
     window.pin.renderPins(advertisements);
-    console.log(advertisements);
     window.map.originalAds = advertisements;
   }
 

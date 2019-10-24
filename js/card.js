@@ -50,7 +50,6 @@
 
     // var sectionMap = document.querySelector('.map');
     var templateCard = document.querySelector('#card').content.querySelector('article');
-    console.log(templateCard);
 
       var mapCardElement = templateCard.cloneNode(true);
       mapCardElement.querySelector('.popup__title').textContent = offer.title;
